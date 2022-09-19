@@ -1,45 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-import data from "./data";
-import Quote from "./Quote";
 
-class Quotes extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            index: 0
-        }
-        this.handleClick = this.handleClick.bind(this);
+function ClickedBtn() {
+    const [items, setItems] = useState([0, 1]);
+    const [hoverItem, setHoverItem] = useState('none')
+    const addBtn = () => {
+        setItems(items => [...items, items.length]);
     }
+    const hovered = (e) => {
+        setHoverItem(e.target.childNodes[1].textContent)
+    }
+    const notHover = () => {
+        setHoverItem('none');
+    }
+    return (
+        <div className='wrapper'>
+            <button onClick={addBtn}>Add</button>
+            <p>Clicked button number: <span>{hoverItem}</span> </p>
+            <ul>
+                {items.map((item, index) =>
+                    <li key={index} onMouseOver={hovered} onMouseLeave={notHover}>Item <span>{item}</span></li>
+                )}
+            </ul>
 
-    handleClick() {
-        let index = this.state.index;
-        index = (index + 1) % data.length;
-        this.setState({
-            index: index
-        })
-    }
-    render() {
-        const quote = data[this.state.index];
-        const myStyle = {
-            backgroundColor: quote.color
-        }
-        return (
-            <div className="quotesWrapper" style={myStyle}>
-                <div className="quoteBlock">
-                    <Quote text={quote.text} author={quote.author} />
-                    <button className="next-quote" style={myStyle} onClick={this.handleClick}>New Quote</button>
-                </div>
-            </div>
-        )
-    }
+        </div>
+    )
 }
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <React.StrictMode>
-    <Quotes />
-  </React.StrictMode>
+    <React.StrictMode>
+        <ClickedBtn />
+    </React.StrictMode>
 );
+
 
